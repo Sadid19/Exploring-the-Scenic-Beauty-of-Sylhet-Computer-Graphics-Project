@@ -33,7 +33,7 @@ The **Exploring the Scenic Beauty of Sylhet** project aims to virtually display 
 - **Car Movement, Boat, train, cloud, birds**
   - **Keywords and Mouse used for controlling the objects**
 
-The project was supervised by- 
+## The project was supervised by- 
 **Mahfujur Rahman**
 **Assistant Professor, Dept. of CS**
 **American International University – Bangladesh (AIUB)**
