@@ -15,44 +15,49 @@
    ===================================================================== */
 int currentScene = 0;
 
-// Sound control (global, shared)
 bool isMuted = false;
 
-void stopAllSounds() {
+void stopAllSounds()
+{
     PlaySound(NULL, NULL, 0);
 }
 
-// =====================================================================
 // SHARED UTILITY
-// =====================================================================
-void renderBitmapString(float x, float y, void *font, char *string) {
-    char *c;
+void renderBitmapString(float x, float y, void *font, const char *string)
+{
+    const char *c;
     glRasterPos2f(x, y);
-    for (c = string; *c != '\0'; c++) {
+    for(c = string; *c != '\0'; c++)
+    {
         glutBitmapCharacter(font, *c);
     }
 }
 
 // drawCircle – used by Tea Garden
-void drawCircle(float radius) {
+void drawCircle(float radius)
+{
     int triangleAmount = 100;
     float twicePi = 2.0f * PI;
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(0.0f, 0.0f);
-        for (int i = 0; i <= triangleAmount; i++) {
-            glVertex2f(
-                radius * cos(i * twicePi / triangleAmount),
-                radius * sin(i * twicePi / triangleAmount)
-            );
-        }
+    glVertex2f(0.0f, 0.0f);
+    for(int i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f
+        (
+         radius * cos(i * twicePi / triangleAmount),
+         radius * sin(i * twicePi / triangleAmount)
+        );
+    }
     glEnd();
 }
 
 // ellipse – used by Jaflong
-void ellipse(float cx, float cy, float rx, float ry) {
+void ellipse(float cx, float cy, float rx, float ry)
+{
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);
-    for (int i = 0; i <= 100; i++) {
+    for(int i = 0; i <= 100; i++)
+    {
         float angle = 2 * 3.1416f * i / 100;
         glVertex2f(cx + rx * cos(angle), cy + ry * sin(angle));
     }
@@ -60,10 +65,12 @@ void ellipse(float cx, float cy, float rx, float ry) {
 }
 
 // circle – used by Utmachora and City
-void circle(float cx, float cy, float r, int segments) {
+void circle(float cx, float cy, float r, int segments)
+{
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);
-    for (int i = 0; i <= segments; i++) {
+    for(int i = 0; i <= segments; i++)
+    {
         float angle = 2.0f * 3.14159f * i / segments;
         glVertex2f(cx + r * cos(angle), cy + r * sin(angle));
     }
@@ -71,19 +78,20 @@ void circle(float cx, float cy, float r, int segments) {
 }
 
 // circleOutline – used by City
-void circleOutline(float cx, float cy, float r, int segments) {
+void circleOutline(float cx, float cy, float r, int segments)
+{
     glBegin(GL_LINE_LOOP);
-    for (int i = 0; i <= segments; i++) {
+    for (int i = 0; i <= segments; i++)
+    {
         float angle = 2.0f * PI * i / segments;
         glVertex2f(cx + r * cos(angle), cy + r * sin(angle));
     }
     glEnd();
 }
 
+//_________________________________________________________________________
 
-// =====================================================================
 //  RAILWAY STATION – global variables & functions  (Scene 2)
-// =====================================================================
 bool  rw_nightMode = false;
 bool  rw_animating = false;
 
@@ -98,50 +106,64 @@ float rw_cloudSpeed = 0.004f;
 
 bool  rw_isTrainSoundPlaying = false;
 
-void rw_trainSound() {
-    if (currentScene == 2 && rw_trainSpeed != 0.0f) {
-        if (!rw_isTrainSoundPlaying && !isMuted) {
+void rw_trainSound()
+{
+    if(currentScene == 2 && rw_trainSpeed != 0.0f)
+    {
+        if(!rw_isTrainSoundPlaying && !isMuted)
+        {
             PlaySound(TEXT("train.wav"), NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
             rw_isTrainSoundPlaying = true;
         }
-    } else {
-        if (rw_isTrainSoundPlaying) {
+    }
+    else
+    {
+        if(rw_isTrainSoundPlaying)
+        {
             stopAllSounds();
             rw_isTrainSoundPlaying = false;
         }
     }
 }
 
-void rw_circle(float x, float y, float r, float red, float green, float blue) {
+void rw_circle(float x, float y, float r, float red, float green, float blue)
+{
     glColor3f(red, green, blue);
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(x, y);
-    for (int i = 0; i <= 100; i++) {
+    for(int i = 0; i <= 100; i++)
+    {
         float angle = 2.0f * 3.14159265f * i / 100.0f;
         glVertex2f(x + r * cos(angle), y + r * sin(angle));
     }
     glEnd();
 }
 
-void rw_emptyCircle(float x, float y, float r) {
+void rw_emptyCircle(float x, float y, float r)
+{
     glColor3f(0.0f, 0.0f, 0.0f);
     glLineWidth(2);
     glBegin(GL_LINE_LOOP);
-    for (int i = 0; i <= 100; i++) {
+    for(int i = 0; i <= 100; i++)
+    {
         float angle = 2.0f * 3.14159265f * i / 100.0f;
         glVertex2f(x + r * cos(angle), y + r * sin(angle));
     }
     glEnd();
 }
 
-void rw_text(float x, float y, const char *str) {
+void rw_text(float x, float y, const char *str)
+{
     glColor3f(1.0f, 1.0f, 1.0f);
     glRasterPos2f(x, y);
-    for (int i = 0; str[i] != '\0'; i++)
+    for(int i = 0; str[i] != '\0'; i++)
+    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[i]);
+    }
 }
 
-void rw_rectangle(float x1, float y1, float x2, float y2, float r, float g, float b) {
+void rw_rectangle(float x1, float y1, float x2, float y2, float r, float g, float b)
+{
     glColor3f(r, g, b);
     glBegin(GL_QUADS);
     glVertex2f(x1, y1);
@@ -160,7 +182,8 @@ void rw_rectangle(float x1, float y1, float x2, float y2, float r, float g, floa
     glEnd();
 }
 
-void rw_line(float x1, float y1, float x2, float y2) {
+void rw_line(float x1, float y1, float x2, float y2)
+{
     glColor3f(0.0f, 0.0f, 0.0f);
     glLineWidth(2);
     glBegin(GL_LINES);
@@ -169,7 +192,8 @@ void rw_line(float x1, float y1, float x2, float y2) {
     glEnd();
 }
 
-void rw_drawStars() {
+void rw_drawStars()
+{
     glColor3f(1.0f, 1.0f, 1.0f);
     glPointSize(3);
     glBegin(GL_POINTS);
@@ -185,7 +209,8 @@ void rw_drawStars() {
     glEnd();
 }
 
-void rw_drawTrain() {
+void rw_drawTrain()
+{
     float t = rw_trainX;
 
     rw_rectangle(0.078f + t, -0.679f, 0.426f + t, -0.554f, 0.10f, 0.30f, 0.85f);
@@ -200,12 +225,16 @@ void rw_drawTrain() {
     glVertex2f(0.843f + t, -0.554f);
     glEnd();
 
-    for (float x = 0.113f; x <= 0.322f; x += 0.070f)
+    for(float x = 0.113f; x <= 0.322f; x += 0.070f)
+    {
+        rw_rectangle(x + t, -0.625f, x + 0.052f + t, -0.589f, 0.60f, 0.88f, 1.00f);
+    }
+
+    for(float x = 0.530f; x <= 0.739f; x += 0.070f)
+    {
         rw_rectangle(x + t, -0.625f, x + 0.052f + t, -0.589f, 0.60f, 0.88f, 1.00f);
 
-    for (float x = 0.530f; x <= 0.739f; x += 0.070f)
-        rw_rectangle(x + t, -0.625f, x + 0.052f + t, -0.589f, 0.60f, 0.88f, 1.00f);
-
+    }
     rw_emptyCircle(0.478f + t, -0.589f, 0.007f);
     rw_emptyCircle(0.510f + t, -0.589f, 0.007f);
     rw_line(0.478f + t, -0.589f, 0.510f + t, -0.589f);
@@ -223,7 +252,8 @@ void rw_drawTrain() {
     rw_line(0.113f + t, -0.696f, 0.443f + t, -0.696f);
     rw_line(0.530f + t, -0.696f, 0.843f + t, -0.696f);
 
-    if (rw_nightMode) {
+    if (rw_nightMode)
+    {
         glColor3f(1.00f, 1.00f, 0.35f);
         glBegin(GL_TRIANGLES);
         glVertex2f(0.913f + t, -0.607f);
@@ -231,12 +261,15 @@ void rw_drawTrain() {
         glVertex2f(1.052f + t, -0.661f);
         glEnd();
         rw_circle(0.913f + t, -0.607f, 0.032f, 1.00f, 1.00f, 0.20f);
-    } else {
+    }
+    else
+    {
         rw_circle(0.913f + t, -0.607f, 0.013f, 1.00f, 1.00f, 0.55f);
     }
 }
 
-void rw_drawClouds() {
+void rw_drawClouds()
+{
     float c = rw_cloudX;
     float cloudColor = rw_nightMode ? 0.55f : 1.00f;
 
@@ -255,7 +288,8 @@ void rw_drawClouds() {
     rw_circle(0.419f + c, 0.787f, 0.121f, cloudColor, cloudColor, cloudColor);
 }
 
-void rw_drawPeople() {
+void rw_drawPeople()
+{
     rw_circle(-0.687f, -0.509f, 0.014f, 0.98f, 0.78f, 0.60f);
     rw_line(-0.687f, -0.527f, -0.687f, -0.598f);
     rw_line(-0.687f, -0.527f, -0.711f, -0.571f);
@@ -271,11 +305,15 @@ void rw_drawPeople() {
     rw_line(-0.478f, -0.598f, -0.464f, -0.661f);
 }
 
-void rw_drawScene() {
+void rw_drawScene()
+{
     if (rw_nightMode)
+    {
         rw_drawStars();
+    }
 
-    if (rw_sunY > -1.179f) {
+    if (rw_sunY > -1.179f)
+    {
         rw_circle(0.600f, rw_sunY, 0.089f, 1.00f, 0.85f, 0.00f);
         rw_line(0.357f, rw_sunY, 0.493f, rw_sunY);
         rw_line(0.450f, rw_sunY + 0.130f, 0.522f, rw_sunY + 0.079f);
@@ -287,9 +325,11 @@ void rw_drawScene() {
         rw_line(0.515f, rw_sunY - 0.082f, 0.450f, rw_sunY - 0.134f);
     }
 
-    if (rw_moonY <= 0.786f)
+    if(rw_moonY <= 0.786f)
+    {
         rw_circle(0.739f, rw_moonY, 0.089f, 0.95f, 0.95f, 0.90f);
 
+    }
     rw_drawClouds();
 
     // birds
@@ -305,8 +345,10 @@ void rw_drawScene() {
     rw_rectangle(-1.000f, -0.768f, 1.000f, -0.714f, 0.12f, 0.12f, 0.12f);
 
     // sleeper rails
-    for (float x = -0.965f; x <= 0.843f; x += 0.070f)
+    for(float x = -0.965f; x <= 0.843f; x += 0.070f)
+    {
         rw_rectangle(x, -0.768f, x + 0.026f, -0.714f, 0.55f, 0.32f, 0.16f);
+    }
 
     // platform
     rw_rectangle(-0.826f, -0.714f, 0.043f, -0.589f, 0.75f, 0.65f, 0.50f);
@@ -344,15 +386,18 @@ void rw_drawScene() {
     rw_rectangle(-0.652f, -0.339f, -0.583f, -0.250f, 0.60f, 0.88f, 1.00f);
     rw_rectangle(-0.374f, -0.339f, -0.304f, -0.250f, 0.60f, 0.88f, 1.00f);
 
-    if (rw_nightMode)
-        rw_drawStars();
+    if(rw_nightMode)
+    {
+         rw_drawStars();
+    }
 
     rw_drawPeople();
     rw_drawTrain();
 }
 
-void displayRailwayStation() {
-    if (rw_nightMode)
+void displayRailwayStation()
+{
+    if(rw_nightMode)
         glClearColor(0.02f, 0.03f, 0.18f, 1.00f);
     else
         glClearColor(0.67f, 0.88f, 1.00f, 1.00f);
@@ -362,28 +407,62 @@ void displayRailwayStation() {
     glFlush();
 }
 
-void rw_update(int value) {
-    if (currentScene == 2) {
-        if (rw_animating) {
-            if (rw_nightMode) { // Transitioning to Night
-                if (rw_sunY > -1.179f) rw_sunY -= 0.009f;
-                else rw_sunY = -1.179f;
+void rw_update(int value)
+{
+    if(currentScene == 2)
+    {
+        if(rw_animating)
+        {
+            if(rw_nightMode)
+            { // Transitioning to Night
+                if(rw_sunY > -1.179f)
+                {
+                    rw_sunY -= 0.009f;
+                }
+                else
+                {
+                    rw_sunY = -1.179f;
+                }
 
-                if (rw_moonY < 0.375f) rw_moonY += 0.009f;
-                else rw_moonY = 0.375f;
+                if(rw_moonY < 0.375f)
+                {
+                    rw_moonY += 0.009f;
+                }
+                else
+                {
+                    rw_moonY = 0.375f;
+                }
 
-                if (rw_sunY <= -1.179f && rw_moonY >= 0.375f)
+                if(rw_sunY <= -1.179f && rw_moonY >= 0.375f)
+                {
                     rw_animating = false;
+                }
             }
-            else { // Transitioning to Day
-                if (rw_sunY < 0.375f) rw_sunY += 0.009f;
-                else rw_sunY = 0.375f;
+            else
+            { // Transitioning to Day
+                if(rw_sunY < 0.375f)
+                {
+                    rw_sunY += 0.009f;
+                }
+                else
+                {
+                    rw_sunY = 0.375f;
+                }
 
-                if (rw_moonY > -1.179f) rw_moonY -= 0.009f;
-                else rw_moonY = -1.179f;
+                if(rw_moonY > -1.179f)
+                {
+                    rw_moonY -= 0.009f;
+                }
+                else
+                {
+                    rw_moonY = -1.179f;
+                }
 
-                if (rw_sunY >= 0.375f && rw_moonY <= -1.179f)
-                    rw_animating = false;
+                if(rw_sunY >= 0.375f && rw_moonY <= -1.179f)
+                {
+                     rw_animating = false;
+
+                }
             }
         }
 
@@ -407,9 +486,10 @@ void rw_update(int value) {
 }
 
 
-// =====================================================================
+// __________________________________________________________________
+
 //  TEA GARDEN – global variables & functions  (Scene 3)
-// =====================================================================
+
 float birdPos    = -1.2f;
 float birdScale  =  1.0f;
 bool  isStarted  = false;
@@ -754,9 +834,9 @@ void displayTeaGarden() {
 }
 
 
-// =====================================================================
+// _________________________________________________________________________________
+
 //  JAFLONG – global variables & functions  (Scene 4)
-// =====================================================================
 GLfloat boatMove  = 0.0f;
 GLfloat birdMove  = 0.0f;
 GLfloat cloudMove = 0.0f;
@@ -1079,486 +1159,784 @@ void displayJaflong() {
 }
 
 
-// =====================================================================
+// _________________________________________________________________________
 //  UTMACHORA WATERFALL – global variables & functions  (Scene 5)
-// =====================================================================
-bool    ut_isNightMode  = false;
-GLfloat ut_carPosition  = -0.8f;
-GLfloat ut_carSpeed     = 0.01f;
-bool    ut_carMoving    = true;
-GLfloat ut_moonY        = -0.2f;
-GLfloat ut_moonTargetY  = 0.82f;
-bool    ut_moonRising   = false;
-GLfloat ut_cloudX       = -0.5375f;
-GLfloat ut_cloudSpeed   = 0.005f;
-bool    ut_cloudMoving  = true;
-GLfloat ut_dropX[]      = {-0.05f, 0.05f, -0.10f, 0.10f};
-GLfloat ut_dropY[]      = { 0.60f, 0.60f,  0.60f, 0.60f};
-GLfloat ut_dropSpeed    = 0.02f;
-GLfloat ut_birdX[]      = {-0.80f, -0.40f, 0.10f};
-GLfloat ut_birdY[]      = { 0.88f,  0.93f, 0.85f};
-GLfloat ut_birdSpeed    = 0.004f;
 
-void ut_sky() {
-    if (ut_isNightMode) glColor3f(0.05f, 0.05f, 0.18f);
-    else                glColor3f(0.53f, 0.81f, 0.92f);
+bool ut_isNightMode = false;
+
+GLfloat ut_carPosition = -0.8f;
+GLfloat ut_carSpeed = 0.01f;
+bool ut_carMoving = true;
+
+GLfloat ut_moonY = -0.2f;
+GLfloat ut_moonTargetY  = 0.82f;
+bool ut_moonRising = false;
+
+GLfloat ut_cloudX = -0.5375f;
+GLfloat ut_cloudSpeed = 0.005f;
+bool ut_cloudMoving = true;
+
+GLfloat ut_dropX[] = {-0.05f, 0.05f, -0.10f, 0.10f};
+GLfloat ut_dropY[] = {0.60f, 0.60f,  0.60f, 0.60f};
+GLfloat ut_dropSpeed = 0.02f;
+
+GLfloat ut_birdX[] = {-0.80f, -0.40f, 0.10f};
+GLfloat ut_birdY[] = {0.88f,  0.93f, 0.85f};
+GLfloat ut_birdSpeed = 0.004f;
+
+void ut_sky()
+{
+    if(ut_isNightMode)
+    {
+        glColor3f(0.05f, 0.05f, 0.18f);
+    }
+    else
+    {
+        glColor3f(0.53f, 0.81f, 0.92f);
+    }
+
     glBegin(GL_QUADS);
-    glVertex2f(-1.00f, 0.25f); glVertex2f(1.00f, 0.25f);
-    glVertex2f( 1.00f, 1.00f); glVertex2f(-1.00f, 1.00f);
+    glVertex2f(-1.00f, 0.25f);
+    glVertex2f(1.00f, 0.25f);
+    glVertex2f(1.00f, 1.00f);
+    glVertex2f(-1.00f, 1.00f);
     glEnd();
 }
 
-void ut_sun() {
-    if (ut_isNightMode) return;
+void ut_sun()
+{
+    if (ut_isNightMode)
+    {
+        return;
+    }
+
     glColor3f(1.0f, 0.85f, 0.0f);
     circle(-0.7812f, 0.8125f, 0.0875f, 40);
     glLineWidth(2.5f);
     glBegin(GL_LINES);
-    glVertex2f(-0.7812f, 0.9458f); glVertex2f(-0.7812f, 0.9917f);
-    glVertex2f(-0.7812f, 0.6792f); glVertex2f(-0.7812f, 0.6333f);
-    glVertex2f(-0.8812f, 0.8125f); glVertex2f(-0.9156f, 0.8125f);
-    glVertex2f(-0.6813f, 0.8125f); glVertex2f(-0.6469f, 0.8125f);
-    glVertex2f(-0.8438f, 0.8958f); glVertex2f(-0.8688f, 0.9292f);
-    glVertex2f(-0.7188f, 0.8958f); glVertex2f(-0.6937f, 0.9292f);
-    glVertex2f(-0.8438f, 0.7292f); glVertex2f(-0.8688f, 0.6958f);
-    glVertex2f(-0.7188f, 0.7292f); glVertex2f(-0.6937f, 0.6958f);
+    glVertex2f(-0.7812f, 0.9458f);
+    glVertex2f(-0.7812f, 0.9917f);
+    glVertex2f(-0.7812f, 0.6792f);
+    glVertex2f(-0.7812f, 0.6333f);
+    glVertex2f(-0.8812f, 0.8125f);
+    glVertex2f(-0.9156f, 0.8125f);
+    glVertex2f(-0.6813f, 0.8125f);
+    glVertex2f(-0.6469f, 0.8125f);
+    glVertex2f(-0.8438f, 0.8958f);
+    glVertex2f(-0.8688f, 0.9292f);
+    glVertex2f(-0.7188f, 0.8958f);
+    glVertex2f(-0.6937f, 0.9292f);
+    glVertex2f(-0.8438f, 0.7292f);
+    glVertex2f(-0.8688f, 0.6958f);
+    glVertex2f(-0.7188f, 0.7292f);
+    glVertex2f(-0.6937f, 0.6958f);
     glEnd();
 }
 
-void ut_moon() {
-    if (!ut_isNightMode) return;
+void ut_moon()
+{
+    if(!ut_isNightMode)
+    {
+        return;
+    }
+
     glColor3f(0.95f, 0.95f, 0.80f);
     circle(0.7812f, ut_moonY, 0.0875f, 40);
     glColor3f(0.80f, 0.80f, 0.65f);
-    circle(0.745f,  ut_moonY + 0.025f, 0.018f, 20);
-    circle(0.810f,  ut_moonY - 0.020f, 0.013f, 20);
-    circle(0.770f,  ut_moonY - 0.035f, 0.010f, 20);
-    if (ut_moonY > 0.50f) {
+    circle(0.745f, ut_moonY + 0.025f, 0.018f, 20);
+    circle(0.810f, ut_moonY - 0.020f, 0.013f, 20);
+    circle(0.770f, ut_moonY - 0.035f, 0.010f, 20);
+    if(ut_moonY > 0.50f)
+    {
         glColor3f(1.0f, 1.0f, 1.0f);
-        circle(-0.60f,0.90f,0.012f,12); circle(-0.20f,0.95f,0.009f,12);
-        circle( 0.10f,0.88f,0.011f,12); circle( 0.40f,0.93f,0.008f,12);
-        circle( 0.20f,0.72f,0.010f,12); circle(-0.50f,0.75f,0.009f,12);
-        circle( 0.55f,0.78f,0.011f,12); circle(-0.85f,0.65f,0.008f,12);
-        circle( 0.90f,0.62f,0.009f,12); circle(-0.30f,0.82f,0.007f,12);
+        circle(-0.60f,0.90f,0.012f,12);
+        circle(-0.20f,0.95f,0.009f,12);
+        circle(0.10f,0.88f,0.011f,12);
+        circle(0.40f,0.93f,0.008f,12);
+        circle(0.20f,0.72f,0.010f,12);
+        circle(-0.50f,0.75f,0.009f,12);
+        circle(0.55f,0.78f,0.011f,12);
+        circle(-0.85f,0.65f,0.008f,12);
+        circle(0.90f,0.62f,0.009f,12);
+        circle(-0.30f,0.82f,0.007f,12);
     }
 }
 
-void ut_cloud(float cx, float cy) {
-    if (ut_isNightMode) glColor3f(0.55f, 0.55f, 0.62f);
-    else                glColor3f(1.0f,  1.0f,  1.0f);
-    circle(cx,          cy,        0.0688f, 30);
-    circle(cx + 0.0781f, cy,       0.0875f, 30);
-    circle(cx + 0.1656f, cy,       0.0688f, 30);
+void ut_cloud(float cx, float cy)
+{
+    if(ut_isNightMode)
+    {
+        glColor3f(0.55f, 0.55f, 0.62f);
+    }
+    else
+    {
+        glColor3f(1.0f, 1.0f, 1.0f);
+    }
+
+    circle(cx, cy, 0.0688f, 30);
+    circle(cx + 0.0781f, cy, 0.0875f, 30);
+    circle(cx + 0.1656f, cy, 0.0688f, 30);
     circle(cx + 0.0406f, cy+0.0667f, 0.0688f, 30);
-    circle(cx + 0.1156f, cy+0.0750f, 0.0688f, 30);
+    circle(cx + 0.1156f, cy + 0.0750f, 0.0688f, 30);
 }
 
-void ut_leftCliff() {
+void ut_leftCliff()
+{
     glColor3f(0.50f, 0.38f, 0.28f);
     glBegin(GL_QUADS);
-    glVertex2f(-1.0000f,0.0625f); glVertex2f(-0.0938f,0.0625f);
-    glVertex2f(-0.0938f,0.6667f); glVertex2f(-1.0000f,0.6667f);
+
+    glVertex2f(-1.0000f,0.0625f);
+    glVertex2f(-0.0938f,0.0625f);
+    glVertex2f(-0.0938f,0.6667f);
+    glVertex2f(-1.0000f,0.6667f);
     glEnd();
+
     glColor3f(0.38f, 0.28f, 0.18f);
     glLineWidth(1.5f);
+
     glBegin(GL_LINES);
-    glVertex2f(-0.7812f,0.6667f); glVertex2f(-0.7344f,0.0625f);
-    glVertex2f(-0.5625f,0.6667f); glVertex2f(-0.5156f,0.0625f);
-    glVertex2f(-0.3594f,0.6667f); glVertex2f(-0.3063f,0.0625f);
-    glVertex2f(-0.1937f,0.6667f); glVertex2f(-0.1500f,0.0625f);
+    glVertex2f(-0.7812f,0.6667f);
+    glVertex2f(-0.7344f,0.0625f);
+    glVertex2f(-0.5625f,0.6667f);
+    glVertex2f(-0.5156f,0.0625f);
+    glVertex2f(-0.3594f,0.6667f);
+    glVertex2f(-0.3063f,0.0625f);
+    glVertex2f(-0.1937f,0.6667f);
+    glVertex2f(-0.1500f,0.0625f);
     glEnd();
+
     glColor3f(0.15f, 0.55f, 0.10f);
     glBegin(GL_QUADS);
-    glVertex2f(-1.0000f,0.6250f); glVertex2f(-0.0938f,0.6250f);
-    glVertex2f(-0.0938f,0.7500f); glVertex2f(-1.0000f,0.7500f);
+    glVertex2f(-1.0000f,0.6250f);
+    glVertex2f(-0.0938f,0.6250f);
+    glVertex2f(-0.0938f,0.7500f);
+    glVertex2f(-1.0000f,0.7500f);
     glEnd();
 }
 
-void ut_rightCliff() {
+void ut_rightCliff()
+{
     glColor3f(0.50f, 0.38f, 0.28f);
     glBegin(GL_QUADS);
-    glVertex2f(0.0938f,0.0625f); glVertex2f(1.0000f,0.0625f);
-    glVertex2f(1.0000f,0.6667f); glVertex2f(0.0938f,0.6667f);
+
+    glVertex2f(0.0938f,0.0625f);
+    glVertex2f(1.0000f,0.0625f);
+    glVertex2f(1.0000f,0.6667f);
+    glVertex2f(0.0938f,0.6667f);
     glEnd();
+
     glColor3f(0.38f, 0.28f, 0.18f);
     glLineWidth(1.5f);
+
     glBegin(GL_LINES);
-    glVertex2f(0.1938f,0.6667f); glVertex2f(0.1500f,0.0625f);
-    glVertex2f(0.3906f,0.6667f); glVertex2f(0.3375f,0.0625f);
-    glVertex2f(0.5781f,0.6667f); glVertex2f(0.5156f,0.0625f);
-    glVertex2f(0.7750f,0.6667f); glVertex2f(0.7125f,0.0625f);
+    glVertex2f(0.1938f,0.6667f);
+    glVertex2f(0.1500f,0.0625f);
+    glVertex2f(0.3906f,0.6667f);
+    glVertex2f(0.3375f,0.0625f);
+    glVertex2f(0.5781f,0.6667f);
+    glVertex2f(0.5156f,0.0625f);
+    glVertex2f(0.7750f,0.6667f);
+    glVertex2f(0.7125f,0.0625f);
     glEnd();
+
     glColor3f(0.15f, 0.55f, 0.10f);
     glBegin(GL_QUADS);
-    glVertex2f(0.0938f,0.6250f); glVertex2f(1.0000f,0.6250f);
-    glVertex2f(1.0000f,0.7500f); glVertex2f(0.0938f,0.7500f);
+    glVertex2f(0.0938f,0.6250f);
+    glVertex2f(1.0000f,0.6250f);
+    glVertex2f(1.0000f,0.7500f);
+    glVertex2f(0.0938f,0.7500f);
+
     glEnd();
 }
 
-void ut_waterfallBody() {
+void ut_waterfallBody()
+{
     glColor3f(0.72f, 0.92f, 0.97f);
     glBegin(GL_QUADS);
-    glVertex2f(-0.0938f,0.0625f); glVertex2f(0.0938f,0.0625f);
-    glVertex2f( 0.0938f,0.6667f); glVertex2f(-0.0938f,0.6667f);
+    glVertex2f(-0.0938f,0.0625f);
+    glVertex2f(0.0938f,0.0625f);
+    glVertex2f(0.0938f,0.6667f);
+    glVertex2f(-0.0938f,0.6667f);
     glEnd();
+
     glColor3f(1.0f, 1.0f, 1.0f);
     glLineWidth(2.0f);
     glBegin(GL_LINES);
-    glVertex2f(-0.0687f,0.6667f); glVertex2f(-0.0781f,0.2292f);
-    glVertex2f(-0.0375f,0.6667f); glVertex2f(-0.0312f,0.2083f);
-    glVertex2f( 0.0000f,0.6667f); glVertex2f( 0.0000f,0.1875f);
-    glVertex2f( 0.0375f,0.6667f); glVertex2f( 0.0312f,0.2083f);
-    glVertex2f( 0.0688f,0.6667f); glVertex2f( 0.0781f,0.2292f);
+    glVertex2f(-0.0687f,0.6667f);
+    glVertex2f(-0.0781f,0.2292f);
+    glVertex2f(-0.0375f,0.6667f);
+    glVertex2f(-0.0312f,0.2083f);
+    glVertex2f(0.0000f,0.6667f);
+    glVertex2f(0.0000f,0.1875f);
+    glVertex2f(0.0375f,0.6667f);
+    glVertex2f(0.0312f,0.2083f);
+    glVertex2f(0.0688f,0.6667f);
+    glVertex2f(0.0781f,0.2292f);
     glEnd();
 }
 
-void ut_waterfallSplash() {
+void ut_waterfallSplash()
+{
     glColor3f(0.72f, 0.92f, 0.97f);
-    circle( 0.0000f, 0.0750f, 0.0875f, 30);
+
+    circle(0.0000f, 0.0750f, 0.0875f, 30);
     circle(-0.0563f, 0.0917f, 0.0500f, 30);
-    circle( 0.0562f, 0.0917f, 0.0500f, 30);
+    circle(0.0562f, 0.0917f, 0.0500f, 30);
     glColor3f(1.0f, 1.0f, 1.0f);
-    circle( 0.0000f, 0.0958f, 0.0563f, 30);
+    circle(0.0000f, 0.0958f, 0.0563f, 30);
     circle(-0.0375f, 0.1042f, 0.0313f, 30);
-    circle( 0.0375f, 0.1042f, 0.0313f, 30);
+    circle(0.0375f, 0.1042f, 0.0313f, 30);
 }
 
-void ut_waterDrop(GLfloat x, GLfloat y) {
+void ut_waterDrop(GLfloat x, GLfloat y)
+{
     glColor3f(0.72f, 0.92f, 0.97f);
     circle(x, y, 0.025f, 20);
 }
 
-void ut_waterfallWithDrops() {
+void ut_waterfallWithDrops()
+{
     ut_waterfallBody();
     ut_waterfallSplash();
-    for (int i = 0; i < 4; i++)
-        ut_waterDrop(ut_dropX[i], ut_dropY[i]);
+    for(int i = 0; i < 4; i++)
+    {
+       ut_waterDrop(ut_dropX[i], ut_dropY[i]);
+    }
+
 }
 
-void ut_river() {
-    if (ut_isNightMode) glColor3f(0.10f, 0.30f, 0.55f);
-    else                glColor3f(0.20f, 0.55f, 0.85f);
+void ut_river()
+{
+    if(ut_isNightMode)
+    {
+        glColor3f(0.10f, 0.30f, 0.55f);
+    }
+    else
+    {
+        glColor3f(0.20f, 0.55f, 0.85f);
+    }
+
     glBegin(GL_POLYGON);
-    glVertex2f(-1.0000f,-0.2917f); glVertex2f( 1.0000f,-0.2917f);
-    glVertex2f( 1.0000f,-0.0417f); glVertex2f( 0.5625f, 0.0208f);
-    glVertex2f( 0.0000f, 0.0500f); glVertex2f(-0.5625f, 0.0208f);
+    glVertex2f(-1.0000f,-0.2917f);
+    glVertex2f(1.0000f,-0.2917f);
+    glVertex2f(1.0000f,-0.0417f);
+    glVertex2f(0.5625f, 0.0208f);
+    glVertex2f(0.0000f, 0.0500f);
+    glVertex2f(-0.5625f, 0.0208f);
     glVertex2f(-1.0000f,-0.0417f);
     glEnd();
+
     glColor3f(0.8f, 0.95f, 1.0f);
     glLineWidth(1.5f);
+
     glBegin(GL_LINES);
-    glVertex2f(-0.7500f,-0.1250f); glVertex2f(-0.5312f,-0.1250f);
-    glVertex2f(-0.6875f,-0.1875f); glVertex2f(-0.4688f,-0.1875f);
-    glVertex2f( 0.4375f,-0.1250f); glVertex2f( 0.6875f,-0.1250f);
-    glVertex2f( 0.4062f,-0.1875f); glVertex2f( 0.6250f,-0.1875f);
-    glVertex2f(-0.2812f,-0.1458f); glVertex2f(-0.0625f,-0.1458f);
-    glVertex2f( 0.0625f,-0.1458f); glVertex2f( 0.2812f,-0.1458f);
-    glVertex2f(-0.2188f,-0.2167f); glVertex2f(-0.0312f,-0.2167f);
-    glVertex2f( 0.0312f,-0.2167f); glVertex2f( 0.2188f,-0.2167f);
+    glVertex2f(-0.7500f,-0.1250f);
+    glVertex2f(-0.5312f,-0.1250f);
+    glVertex2f(-0.6875f,-0.1875f);
+    glVertex2f(-0.4688f,-0.1875f);
+    glVertex2f(0.4375f,-0.1250f);
+    glVertex2f(0.6875f,-0.1250f);
+    glVertex2f(0.4062f,-0.1875f);
+    glVertex2f(0.6250f,-0.1875f);
+    glVertex2f(-0.2812f,-0.1458f);
+    glVertex2f(-0.0625f,-0.1458f);
+    glVertex2f(0.0625f,-0.1458f);
+    glVertex2f(0.2812f,-0.1458f);
+    glVertex2f(-0.2188f,-0.2167f);
+    glVertex2f(-0.0312f,-0.2167f);
+    glVertex2f(0.0312f,-0.2167f);
+    glVertex2f(0.2188f,-0.2167f);
     glEnd();
 }
 
-void ut_leftGreenBank() {
+void ut_leftGreenBank()
+{
     glColor3f(0.20f, 0.65f, 0.10f);
     glBegin(GL_POLYGON);
-    glVertex2f(-1.0000f,-0.2917f); glVertex2f(-1.0000f, 0.0625f);
-    glVertex2f(-0.0938f, 0.0625f); glVertex2f(-0.0938f, 0.0000f);
-    glVertex2f(-0.3750f,-0.0500f); glVertex2f(-0.6875f,-0.0833f);
+    glVertex2f(-1.0000f,-0.2917f);
+    glVertex2f(-1.0000f, 0.0625f);
+    glVertex2f(-0.0938f, 0.0625f);
+    glVertex2f(-0.0938f, 0.0000f);
+    glVertex2f(-0.3750f,-0.0500f);
+    glVertex2f(-0.6875f,-0.0833f);
     glVertex2f(-1.0000f,-0.0417f);
     glEnd();
+
     glColor3f(0.15f, 0.55f, 0.08f);
     glBegin(GL_POLYGON);
-    glVertex2f(-1.0000f, 0.0625f); glVertex2f(-0.0938f, 0.0625f);
-    glVertex2f(-0.0938f, 0.0333f); glVertex2f(-0.5312f, 0.0167f);
+    glVertex2f(-1.0000f, 0.0625f);
+    glVertex2f(-0.0938f, 0.0625f);
+    glVertex2f(-0.0938f, 0.0333f);
+    glVertex2f(-0.5312f, 0.0167f);
     glVertex2f(-1.0000f, 0.0083f);
     glEnd();
+
     glColor3f(0.25f, 0.70f, 0.12f);
     circle(-0.8125f, 0.0750f, 0.0625f, 20);
     circle(-0.5469f, 0.0792f, 0.0688f, 20);
     circle(-0.2656f, 0.0750f, 0.0563f, 20);
 }
 
-void ut_rightGreenBank() {
+void ut_rightGreenBank()
+{
     glColor3f(0.20f, 0.65f, 0.10f);
     glBegin(GL_POLYGON);
-    glVertex2f(1.0000f,-0.2917f); glVertex2f(1.0000f, 0.0625f);
-    glVertex2f(0.0938f, 0.0625f); glVertex2f(0.0938f, 0.0000f);
-    glVertex2f(0.3750f,-0.0500f); glVertex2f(0.6875f,-0.0833f);
+    glVertex2f(1.0000f,-0.2917f);
+    glVertex2f(1.0000f, 0.0625f);
+    glVertex2f(0.0938f, 0.0625f);
+    glVertex2f(0.0938f, 0.0000f);
+    glVertex2f(0.3750f,-0.0500f);
+    glVertex2f(0.6875f,-0.0833f);
     glVertex2f(1.0000f,-0.0417f);
     glEnd();
+
     glColor3f(0.15f, 0.55f, 0.08f);
     glBegin(GL_POLYGON);
-    glVertex2f(1.0000f, 0.0625f); glVertex2f(0.0938f, 0.0625f);
-    glVertex2f(0.0938f, 0.0333f); glVertex2f(0.5312f, 0.0167f);
+    glVertex2f(1.0000f, 0.0625f);
+    glVertex2f(0.0938f, 0.0625f);
+    glVertex2f(0.0938f, 0.0333f);
+    glVertex2f(0.5312f, 0.0167f);
     glVertex2f(1.0000f, 0.0083f);
     glEnd();
+
     glColor3f(0.25f, 0.70f, 0.12f);
     circle(0.2500f, 0.0750f, 0.0625f, 20);
     circle(0.5312f, 0.0792f, 0.0688f, 20);
     circle(0.7969f, 0.0750f, 0.0563f, 20);
 }
 
-void ut_bottomGreenBanks() {
+void ut_bottomGreenBanks()
+{
     glColor3f(0.20f, 0.62f, 0.10f);
     glBegin(GL_POLYGON);
-    glVertex2f(-1.0000f,-0.6667f); glVertex2f(-1.0000f,-0.2917f);
-    glVertex2f(-0.5625f,-0.2917f); glVertex2f(-0.6875f,-0.6667f);
+
+    glVertex2f(-1.0000f,-0.6667f);
+    glVertex2f(-1.0000f,-0.2917f);
+    glVertex2f(-0.5625f,-0.2917f);
+    glVertex2f(-0.6875f,-0.6667f);
     glEnd();
+
     glBegin(GL_POLYGON);
-    glVertex2f(1.0000f,-0.6667f); glVertex2f(1.0000f,-0.2917f);
-    glVertex2f(0.5625f,-0.2917f); glVertex2f(0.6875f,-0.6667f);
+    glVertex2f(1.0000f,-0.6667f);
+    glVertex2f(1.0000f,-0.2917f);
+    glVertex2f(0.5625f,-0.2917f);
+    glVertex2f(0.6875f,-0.6667f);
     glEnd();
+
     glBegin(GL_POLYGON);
-    glVertex2f(-0.6875f,-0.6667f); glVertex2f(-0.5625f,-0.2917f);
-    glVertex2f( 0.5625f,-0.2917f); glVertex2f( 0.6875f,-0.6667f);
+    glVertex2f(-0.6875f,-0.6667f);
+    glVertex2f(-0.5625f,-0.2917f);
+    glVertex2f(0.5625f,-0.2917f);
+    glVertex2f(0.6875f,-0.6667f);
     glEnd();
+
     glColor3f(0.15f, 0.50f, 0.08f);
     glLineWidth(1.5f);
+
     glBegin(GL_LINES);
-    glVertex2f(-1.0000f,-0.6583f); glVertex2f(1.0000f,-0.6583f);
+    glVertex2f(-1.0000f,-0.6583f);
+    glVertex2f(1.0000f,-0.6583f);
     glEnd();
 }
 
-void ut_road() {
+void ut_road()
+{
     glColor3f(0.62f, 0.50f, 0.35f);
     glBegin(GL_QUADS);
-    glVertex2f(-1.00f,-1.0000f); glVertex2f(1.00f,-1.0000f);
-    glVertex2f( 1.00f,-0.6667f); glVertex2f(-1.00f,-0.6667f);
+    glVertex2f(-1.00f,-1.0000f);
+    glVertex2f(1.00f,-1.0000f);
+    glVertex2f(1.00f,-0.6667f);
+    glVertex2f(-1.00f,-0.6667f);
     glEnd();
+
     glColor3f(0.95f, 0.90f, 0.75f);
     glLineWidth(2.5f);
+
     glBegin(GL_LINES);
-    glVertex2f(-1.00f,-0.8333f); glVertex2f(-0.7812f,-0.8333f);
-    glVertex2f(-0.7188f,-0.8333f); glVertex2f(-0.4688f,-0.8333f);
-    glVertex2f(-0.4062f,-0.8333f); glVertex2f(-0.1562f,-0.8333f);
-    glVertex2f(-0.0938f,-0.8333f); glVertex2f( 0.1562f,-0.8333f);
-    glVertex2f( 0.2188f,-0.8333f); glVertex2f( 0.4688f,-0.8333f);
-    glVertex2f( 0.5312f,-0.8333f); glVertex2f( 0.7812f,-0.8333f);
-    glVertex2f( 0.8438f,-0.8333f); glVertex2f( 1.0000f,-0.8333f);
+    glVertex2f(-1.00f,-0.8333f);
+    glVertex2f(-0.7812f, -0.8333f);
+    glVertex2f(-0.7188f, -0.8333f);
+    glVertex2f(-0.4688f, -0.8333f);
+    glVertex2f(-0.4062f, -0.8333f);
+    glVertex2f(-0.1562f, -0.8333f);
+    glVertex2f(-0.0938f, -0.8333f);
+    glVertex2f(0.1562f, -0.8333f);
+    glVertex2f(0.2188f, -0.8333f);
+    glVertex2f(0.4688f, -0.8333f);
+    glVertex2f(0.5312f, -0.8333f);
+    glVertex2f(0.7812f, -0.8333f);
+    glVertex2f(0.8438f, -0.8333f);
+    glVertex2f(1.0000f, -0.8333f);
     glEnd();
+
     glColor3f(0.45f, 0.35f, 0.22f);
     glLineWidth(2.0f);
+
     glBegin(GL_LINES);
-    glVertex2f(-1.0000f,-0.6750f); glVertex2f(1.0000f,-0.6750f);
-    glVertex2f(-1.0000f,-0.9875f); glVertex2f(1.0000f,-0.9875f);
+    glVertex2f(-1.0000f,-0.6750f);
+    glVertex2f(1.0000f,-0.6750f);
+    glVertex2f(-1.0000f,-0.9875f);
+    glVertex2f(1.0000f,-0.9875f);
     glEnd();
 }
 
-void ut_tree(float x, float y) {
+void ut_tree(float x, float y)
+{
     glColor3f(0.55f, 0.35f, 0.15f);
     glBegin(GL_QUADS);
-    glVertex2f(x-0.028f,y);       glVertex2f(x+0.028f,y);
-    glVertex2f(x+0.028f,y+0.25f); glVertex2f(x-0.028f,y+0.25f);
+
+    glVertex2f(x-0.028f,y);
+    glVertex2f(x+0.028f,y);
+    glVertex2f(x+0.028f,y+0.25f);
+    glVertex2f(x-0.028f,y+0.25f);
     glEnd();
+
     glColor3f(0.40f, 0.22f, 0.08f);
     glBegin(GL_QUADS);
-    glVertex2f(x+0.010f,y);       glVertex2f(x+0.028f,y);
-    glVertex2f(x+0.028f,y+0.25f); glVertex2f(x+0.010f,y+0.25f);
+    glVertex2f(x+0.010f,y);
+    glVertex2f(x+0.028f,y);
+    glVertex2f(x+0.028f,y+0.25f);
+    glVertex2f(x+0.010f,y+0.25f);
     glEnd();
+
     glColor3f(0.55f, 0.35f, 0.15f);
     glBegin(GL_QUADS);
-    glVertex2f(x-0.028f,y+0.18f); glVertex2f(x-0.005f,y+0.18f);
-    glVertex2f(x-0.075f,y+0.34f); glVertex2f(x-0.095f,y+0.33f);
+    glVertex2f(x-0.028f,y+0.18f);
+    glVertex2f(x-0.005f,y+0.18f);
+    glVertex2f(x-0.075f,y+0.34f);
+    glVertex2f(x-0.095f,y+0.33f);
     glEnd();
+
     glBegin(GL_QUADS);
-    glVertex2f(x+0.005f,y+0.18f); glVertex2f(x+0.028f,y+0.18f);
-    glVertex2f(x+0.095f,y+0.33f); glVertex2f(x+0.075f,y+0.34f);
+    glVertex2f(x+0.005f,y+0.18f);
+    glVertex2f(x+0.028f,y+0.18f);
+    glVertex2f(x+0.095f,y+0.33f);
+    glVertex2f(x+0.075f,y+0.34f);
     glEnd();
+
     glColor3f(0.40f, 0.22f, 0.08f);
     glBegin(GL_QUADS);
-    glVertex2f(x+0.016f,y+0.19f); glVertex2f(x+0.028f,y+0.19f);
-    glVertex2f(x+0.095f,y+0.33f); glVertex2f(x+0.085f,y+0.335f);
+    glVertex2f(x+0.016f,y+0.19f);
+    glVertex2f(x+0.028f,y+0.19f);
+    glVertex2f(x+0.095f,y+0.33f);
+    glVertex2f(x+0.085f,y+0.335f);
     glEnd();
+
     glColor3f(0.25f, 0.70f, 0.20f);
-    circle(x-0.100f,y+0.33f,0.100f,30); circle(x+0.100f,y+0.33f,0.100f,30);
-    circle(x,       y+0.43f,0.115f,30); circle(x,       y+0.32f,0.085f,30);
+    circle(x-0.100f,y+0.33f,0.100f,30);
+    circle(x+0.100f,y+0.33f,0.100f,30);
+    circle(x,y+0.43f,0.115f,30);
+    circle(x, y+0.32f,0.085f,30);
 }
 
-void ut_smallTree(float x, float y) {
+void ut_smallTree(float x, float y)
+{
     glColor3f(0.45f, 0.28f, 0.10f);
     glBegin(GL_QUADS);
-    glVertex2f(x-0.008f,y);       glVertex2f(x+0.008f,y);
-    glVertex2f(x+0.008f,y+0.13f); glVertex2f(x-0.008f,y+0.13f);
+
+    glVertex2f(x-0.008f,y);
+    glVertex2f(x+0.008f,y);
+    glVertex2f(x+0.008f,y+0.13f);
+    glVertex2f(x-0.008f,y+0.13f);
     glEnd();
+
     glColor3f(0.20f, 0.55f, 0.25f);
-    circle(x-0.060f,y+0.12f,0.045f,25); circle(x-0.020f,y+0.13f,0.050f,25);
-    circle(x+0.020f,y+0.13f,0.050f,25); circle(x+0.060f,y+0.12f,0.045f,25);
-    circle(x-0.040f,y+0.17f,0.045f,25); circle(x+0.000f,y+0.18f,0.050f,25);
-    circle(x+0.040f,y+0.17f,0.045f,25); circle(x-0.020f,y+0.21f,0.040f,25);
-    circle(x+0.020f,y+0.21f,0.040f,25); circle(x+0.000f,y+0.235f,0.038f,25);
+    circle(x-0.060f,y+0.12f,0.045f,25);
+    circle(x-0.020f,y+0.13f,0.050f,25);
+    circle(x+0.020f,y+0.13f,0.050f,25);
+    circle(x+0.060f,y+0.12f,0.045f,25);
+    circle(x-0.040f,y+0.17f,0.045f,25);
+    circle(x+0.000f,y+0.18f,0.050f,25);
+    circle(x+0.040f,y+0.17f,0.045f,25);
+    circle(x-0.020f,y+0.21f,0.040f,25);
+    circle(x+0.020f,y+0.21f,0.040f,25);
+    circle(x+0.000f,y+0.235f,0.038f,25);
 }
 
-void ut_smallBush(float x, float y) {
+void ut_smallBush(float x, float y)
+{
     glColor3f(0.20f, 0.55f, 0.25f);
-    circle(x-0.045f,y,      0.035f,25); circle(x-0.015f,y+0.005f,0.040f,25);
-    circle(x+0.015f,y+0.005f,0.040f,25); circle(x+0.045f,y,       0.035f,25);
-    circle(x-0.020f,y+0.030f,0.035f,25); circle(x+0.020f,y+0.030f,0.035f,25);
+    circle(x-0.045f,y, 0.035f,25);
+    circle(x-0.015f,y+0.005f,0.040f,25);
+    circle(x+0.015f,y+0.005f,0.040f,25);
+    circle(x+0.045f,y, 0.035f,25);
+    circle(x-0.020f,y+0.030f,0.035f,25);
+    circle(x+0.020f,y+0.030f,0.035f,25);
     circle(x+0.000f,y+0.045f,0.030f,25);
 }
 
-void ut_stone(float x, float y, float size) {
+void ut_stone(float x, float y, float size)
+{
     glColor3f(0.55f, 0.47f, 0.35f);
     circle(x, y, size, 20);
 }
 
-void ut_bird(float x, float y) {
+void ut_bird(float x, float y)
+{
     glColor3f(0.10f, 0.10f, 0.10f);
     glLineWidth(2.0f);
     glBegin(GL_LINE_STRIP);
-    glVertex2f(x-0.060f,y); glVertex2f(x-0.030f,y+0.022f); glVertex2f(x,y);
+    glVertex2f(x-0.060f,y);
+    glVertex2f(x-0.030f,y+0.022f);
+    glVertex2f(x,y);
     glEnd();
+
     glBegin(GL_LINE_STRIP);
-    glVertex2f(x,y); glVertex2f(x+0.030f,y+0.022f); glVertex2f(x+0.060f,y);
+    glVertex2f(x,y);
+    glVertex2f(x+0.030f,y+0.022f);
+    glVertex2f(x+0.060f,y);
     glEnd();
 }
 
-void ut_car() {
+void ut_car()
+{
     glPushMatrix();
     glTranslatef(ut_carPosition, -0.80f, 0.0f);
 
     glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_QUADS);
-    glVertex2f(-0.28f,0.0f); glVertex2f(0.28f,0.0f);
-    glVertex2f( 0.28f,0.13f); glVertex2f(-0.28f,0.13f);
+    glVertex2f(-0.28f,0.0f);
+    glVertex2f(0.28f,0.0f);
+    glVertex2f(0.28f,0.13f);
+    glVertex2f(-0.28f,0.13f);
     glEnd();
+
     glColor3f(1.0f, 0.0f, 0.0f);
     glBegin(GL_QUADS);
-    glVertex2f(-0.17f,0.13f); glVertex2f(0.17f,0.13f);
-    glVertex2f( 0.17f,0.24f); glVertex2f(-0.17f,0.24f);
+
+    glVertex2f(-0.17f,0.13f);
+    glVertex2f(0.17f,0.13f);
+    glVertex2f(0.17f,0.24f);
+    glVertex2f(-0.17f,0.24f);
     glEnd();
+
     glColor3f(0.6f, 0.8f, 1.0f);
     glBegin(GL_QUADS);
-    glVertex2f(-0.13f,0.14f); glVertex2f(0.13f,0.14f);
-    glVertex2f( 0.13f,0.23f); glVertex2f(-0.13f,0.23f);
+    glVertex2f(-0.13f,0.14f);
+    glVertex2f(0.13f,0.14f);
+    glVertex2f(0.13f,0.23f);
+    glVertex2f(-0.13f,0.23f);
     glEnd();
+
     glColor3f(1.0f, 1.0f, 0.0f);
     glBegin(GL_QUADS);
-    glVertex2f(0.24f,0.04f); glVertex2f(0.28f,0.04f);
-    glVertex2f(0.28f,0.09f); glVertex2f(0.24f,0.09f);
+    glVertex2f(0.24f,0.04f);
+    glVertex2f(0.28f,0.04f);
+    glVertex2f(0.28f,0.09f);
+    glVertex2f(0.24f,0.09f);
     glEnd();
+
     glColor3f(0.0f, 0.0f, 0.0f);
-    circle(-0.17f,0.0f,0.065f,20); circle(0.17f,0.0f,0.065f,20);
+    circle(-0.17f,0.0f,0.065f,20);
+    circle(0.17f,0.0f,0.065f,20);
     glColor3f(1.0f, 1.0f, 1.0f);
-    circle(-0.17f,0.0f,0.028f,20); circle(0.17f,0.0f,0.028f,20);
+    circle(-0.17f,0.0f,0.028f,20);
+    circle(0.17f,0.0f,0.028f,20);
 
     glPopMatrix();
 }
 
-void ut_bench() {
+void ut_bench()
+{
     glColor3f(0.55f, 0.35f, 0.15f);
     glBegin(GL_QUADS);
-    glVertex2f(-0.12f,-0.35f); glVertex2f(-0.10f,-0.35f); glVertex2f(-0.10f,-0.25f); glVertex2f(-0.12f,-0.25f);
-    glVertex2f( 0.10f,-0.35f); glVertex2f( 0.12f,-0.35f); glVertex2f( 0.12f,-0.25f); glVertex2f( 0.10f,-0.25f);
-    glVertex2f(-0.12f,-0.45f); glVertex2f(-0.10f,-0.45f); glVertex2f(-0.10f,-0.35f); glVertex2f(-0.12f,-0.35f);
-    glVertex2f( 0.10f,-0.45f); glVertex2f( 0.12f,-0.45f); glVertex2f( 0.12f,-0.35f); glVertex2f( 0.10f,-0.35f);
+    glVertex2f(-0.12f,-0.35f);
+    glVertex2f(-0.10f,-0.35f);
+    glVertex2f(-0.10f,-0.25f);
+    glVertex2f(-0.12f,-0.25f);
+    glVertex2f(0.10f,-0.35f);
+    glVertex2f(0.12f,-0.35f);
+    glVertex2f(0.12f,-0.25f);
+    glVertex2f(0.10f,-0.25f);
+    glVertex2f(-0.12f,-0.45f);
+    glVertex2f(-0.10f,-0.45f);
+    glVertex2f(-0.10f,-0.35f);
+    glVertex2f(-0.12f,-0.35f);
+    glVertex2f(0.10f,-0.45f);
+    glVertex2f(0.12f,-0.45f);
+    glVertex2f(0.12f,-0.35f);
+    glVertex2f(0.10f,-0.35f);
     glEnd();
+
+
     glColor3f(0.65f, 0.45f, 0.25f);
     glBegin(GL_QUADS);
-    glVertex2f(-0.13f,-0.35f); glVertex2f(0.13f,-0.35f); glVertex2f(0.13f,-0.30f); glVertex2f(-0.13f,-0.30f);
+    glVertex2f(-0.13f,-0.35f);
+    glVertex2f(0.13f,-0.35f);
+    glVertex2f(0.13f,-0.30f);
+    glVertex2f(-0.13f,-0.30f);
     glEnd();
+
     glColor3f(0.65f, 0.45f, 0.25f);
     glBegin(GL_QUADS);
-    glVertex2f(-0.13f,-0.25f); glVertex2f(0.13f,-0.25f); glVertex2f(0.13f,-0.18f); glVertex2f(-0.13f,-0.18f);
+    glVertex2f(-0.13f,-0.25f);
+    glVertex2f(0.13f,-0.25f);
+    glVertex2f(0.13f,-0.18f);
+    glVertex2f(-0.13f,-0.18f);
     glEnd();
 
     glColor3f(0.40f, 0.25f, 0.10f);
     glBegin(GL_QUADS);
-    glVertex2f(0.855f,-0.42f); glVertex2f(0.875f,-0.42f);
-    glVertex2f(0.875f,-0.30f); glVertex2f(0.855f,-0.30f);
+    glVertex2f(0.855f,-0.42f);
+    glVertex2f(0.875f,-0.42f);
+    glVertex2f(0.875f,-0.30f);
+    glVertex2f(0.855f,-0.30f);
     glEnd();
+
     glColor3f(0.85f, 0.70f, 0.45f);
     glBegin(GL_QUADS);
-    glVertex2f(0.78f,-0.30f); glVertex2f(0.95f,-0.30f);
-    glVertex2f(0.95f,-0.20f); glVertex2f(0.78f,-0.20f);
+    glVertex2f(0.78f,-0.30f);
+    glVertex2f(0.95f,-0.30f);
+    glVertex2f(0.95f,-0.20f);
+    glVertex2f(0.78f,-0.20f);
     glEnd();
+
     glColor3f(0.40f, 0.25f, 0.10f);
     glLineWidth(2.0f);
     glBegin(GL_LINE_LOOP);
-    glVertex2f(0.78f,-0.30f); glVertex2f(0.95f,-0.30f);
-    glVertex2f(0.95f,-0.20f); glVertex2f(0.78f,-0.20f);
+    glVertex2f(0.78f,-0.30f);
+    glVertex2f(0.95f,-0.30f);
+    glVertex2f(0.95f,-0.20f);
+    glVertex2f(0.78f,-0.20f);
     glEnd();
+
     glColor3f(0.20f, 0.10f, 0.05f);
     glRasterPos2f(0.79f,-0.235f);
     const char* line1 = "Utmachora";
-    for (int i = 0; line1[i] != '\0'; i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, line1[i]);
+    for(int i = 0; line1[i] != '\0'; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, line1[i]);
+    }
+
     glRasterPos2f(0.81f,-0.275f);
     const char* line2 = "Jhorna";
-    for (int i = 0; line2[i] != '\0'; i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, line2[i]);
+    for(int i = 0; line2[i] != '\0'; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, line2[i]);
+    }
 }
 
-void ut_drawBirds() {
-    if (ut_isNightMode) return;
-    for (int i = 0; i < 3; i++)
-        ut_bird(ut_birdX[i], ut_birdY[i]);
+void ut_drawBirds()
+{
+    if(ut_isNightMode)
+    {
+        return;
+    }
+
+    for(int i = 0; i < 3; i++)
+    {
+        ut_bird(ut_birdX[i], ut_birdY[i]); // Fixed copying bug to render birds instead of water drops
+    }
+
 }
 
-void ut_drawInstructions() {
+void ut_drawInstructions()
+{
     glColor3f(0.15f, 0.10f, 0.05f);
     glBegin(GL_QUADS);
-    glVertex2f(-1.00f,-1.00f); glVertex2f(1.00f,-1.00f);
-    glVertex2f( 1.00f,-0.95f); glVertex2f(-1.00f,-0.95f);
+
+    glVertex2f(-1.00f,-1.00f);
+    glVertex2f(1.00f,-1.00f);
+    glVertex2f( 1.00f,-0.95f);
+    glVertex2f(-1.00f,-0.95f);
     glEnd();
+
     glColor3f(1.0f, 1.0f, 1.0f);
     glRasterPos2f(-0.99f,-0.982f);
     const char* instructions = "Press -> n=Day/Night | UP/DOWN=Waterfall Speed | f=Fast Car | g=Slow Car | c=Normal Speed/continue | Space=Stop Car | Mouse Right Click=Cloud | m=Mute | u=Unmute";
-    for (int i = 0; instructions[i] != '\0'; i++)
+    for(int i = 0; instructions[i] != '\0'; i++)
+    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, instructions[i]);
+
+    }
+
 }
 
-void ut_updateCloud(int value) {
-    if (currentScene == 5 && ut_cloudMoving) {
+void ut_updateCloud(int value)
+{
+    if(currentScene == 5 && ut_cloudMoving)
+    {
         ut_cloudX += ut_cloudSpeed;
-        if (ut_cloudX > 1.2f) ut_cloudX = -1.3f;
+        if(ut_cloudX > 1.2f)
+        {
+            ut_cloudX = -1.3f;
+        }
     }
     glutPostRedisplay();
     glutTimerFunc(30, ut_updateCloud, 0);
 }
 
-void ut_updateWaterDrops(int value) {
-    if (currentScene == 5) {
-        for (int i = 0; i < 4; i++) {
+void ut_updateWaterDrops(int value)
+{
+    if(currentScene == 5)
+    {
+        for(int i = 0; i < 4; i++)
+        {
             ut_dropY[i] -= ut_dropSpeed;
-            if (ut_dropY[i] < -0.5f) ut_dropY[i] = 0.60f;
+            if(ut_dropY[i] < -0.5f)
+            {
+                ut_dropY[i] = 0.60f;
+
+            }
         }
     }
     glutPostRedisplay();
     glutTimerFunc(30, ut_updateWaterDrops, 0);
 }
 
-void ut_moonRiseUpdate(int value) {
-    if (!ut_moonRising) return;
-    if (ut_moonY < ut_moonTargetY) {
+void ut_moonRiseUpdate(int value)
+{
+    if(!ut_moonRising)
+    {
+        return;
+    }
+    if(ut_moonY < ut_moonTargetY)
+    {
         ut_moonY += 0.012f;
         glutPostRedisplay();
         glutTimerFunc(30, ut_moonRiseUpdate, 0);
-    } else {
-        ut_moonY      = ut_moonTargetY;
+    }
+    else
+    {
+        ut_moonY = ut_moonTargetY;
         ut_moonRising = false;
         glutPostRedisplay();
     }
 }
 
-void ut_updateBirds(int value) {
-    if (currentScene == 5 && !ut_isNightMode) {
-        for (int i = 0; i < 3; i++) {
+void ut_updateBirds(int value)
+{
+    if(currentScene == 5 && !ut_isNightMode)
+    {
+        for (int i = 0; i < 3; i++)
+        {
             ut_birdX[i] += ut_birdSpeed;
-            if (ut_birdX[i] > 1.2f) ut_birdX[i] = -1.2f;
+            if(ut_birdX[i] > 1.2f)
+            {
+                ut_birdX[i] = -1.2f;
+            }
         }
         glutPostRedisplay();
     }
     glutTimerFunc(30, ut_updateBirds, 0);
 }
 
-void ut_updateCar(int value) {
-    if (currentScene == 5 && ut_carMoving) {
+void ut_updateCar(int value)
+{
+    if(currentScene == 5 && ut_carMoving)
+    {
         ut_carPosition += ut_carSpeed;
-        if (ut_carPosition > 1.1f) ut_carPosition = -1.1f;
+        if(ut_carPosition > 1.1f)
+        {
+            ut_carPosition = -1.1f;
+        }
     }
     glutPostRedisplay();
     glutTimerFunc(30, ut_updateCar, 0);
 }
 
-void displayUtmachora() {
+void displayUtmachora()
+{
     glClear(GL_COLOR_BUFFER_BIT);
 
     ut_sky();
@@ -1566,7 +1944,7 @@ void displayUtmachora() {
     ut_moon();
 
     ut_cloud(ut_cloudX, 0.7500f);
-    ut_cloud(0.4219f,   0.7583f);
+    ut_cloud(0.4219f,0.7583f);
 
     ut_leftCliff();
     ut_rightCliff();
@@ -1579,14 +1957,18 @@ void displayUtmachora() {
     ut_road();
 
     ut_tree(-0.6719f, 0.0333f);
-    ut_tree( 0.6406f, 0.0333f);
+    ut_tree(0.6406f, 0.0333f);
 
-    ut_stone(-0.8f,-0.15f,0.05f); ut_stone(-0.5f,-0.30f,0.07f);
-    ut_stone( 0.3f,-0.35f,0.06f); ut_stone( 0.6f,-0.25f,0.04f);
+    ut_stone(-0.8f,-0.15f,0.05f);
+    ut_stone(-0.5f,-0.30f,0.07f);
+    ut_stone(0.3f,-0.35f,0.06f);
+    ut_stone(0.6f,-0.25f,0.04f);
 
     ut_bench();
     ut_smallTree(-0.85f,-0.55f);
-    ut_smallBush(0.80f,-0.43f); ut_smallBush(0.86f,-0.45f); ut_smallBush(0.92f,-0.43f);
+    ut_smallBush(0.80f,-0.43f);
+    ut_smallBush(0.86f,-0.45f);
+    ut_smallBush(0.92f,-0.43f);
 
     ut_car();
     ut_drawBirds();
@@ -1596,22 +1978,23 @@ void displayUtmachora() {
 }
 
 
-// =====================================================================
+//_____________________________________________________________________
+
 //  SYLHET CITY – global variables & functions  (Scene 6)
-// =====================================================================
-GLfloat cy_carPosition    = 0.0f;
-GLfloat cy_carSpeed       = 0.008f;
-GLfloat cy_birdPosition   = -1.35f;
-GLfloat cy_skyPosition    = 0.0f;
-bool    cy_isCarMoving    = true;
-bool    cy_cloudMoving    = true; // state variable to control city clouds
+
+GLfloat cy_carPosition = 0.0f;
+GLfloat cy_carSpeed = 0.008f;
+GLfloat cy_birdPosition = -1.35f;
+GLfloat cy_skyPosition = 0.0f;
+bool cy_isCarMoving = true;
+bool cy_cloudMoving = true;
 
 GLfloat cy_clockMinuteAngle = 0.0f;
-GLfloat cy_clockHourAngle   = 0.0f;
-GLfloat cy_clockTimer       = 0.0f;
+GLfloat cy_clockHourAngle = 0.0f;
+GLfloat cy_clockTimer = 0.0f;
 
-int     cy_trafficLightState = 2;
-float   cy_trafficLightTimer = 0.0f;
+int cy_trafficLightState = 2;
+float cy_trafficLightTimer = 0.0f;
 
 void cy_Car1Move() {
     if (cy_isCarMoving) {
@@ -1639,8 +2022,8 @@ void cy_sky() {
     glColor3f(0.76f, 0.89f, 0.93f);
     glBegin(GL_QUADS);
     glVertex2f(-1.0f, -0.10f);
-    glVertex2f( 1.0f, -0.10f);
-    glVertex2f( 1.0f,  1.00f);
+    glVertex2f(1.0f, -0.10f);
+    glVertex2f(1.0f,  1.00f);
     glVertex2f(-1.0f,  1.00f);
     glEnd();
 
@@ -1684,16 +2067,16 @@ void cy_trees() {
     glColor3f(0.04f, 0.20f, 0.06f);
     glBegin(GL_QUADS);
     glVertex2f(-1.00f, -0.10f);
-    glVertex2f( 0.44f, -0.10f);
-    glVertex2f( 0.44f,  0.31f);
+    glVertex2f(0.44f, -0.10f);
+    glVertex2f(0.44f,  0.31f);
     glVertex2f(-1.00f,  0.38f);
     glEnd();
 
     glColor3f(0.07f, 0.33f, 0.10f);
     glBegin(GL_QUADS);
     glVertex2f(-1.00f,  0.04f);
-    glVertex2f( 0.44f,  0.04f);
-    glVertex2f( 0.44f,  0.33f);
+    glVertex2f(0.44f,  0.04f);
+    glVertex2f(0.44f,  0.33f);
     glVertex2f(-1.00f,  0.36f);
     glEnd();
 
@@ -1701,14 +2084,14 @@ void cy_trees() {
     circle(-0.96f, 0.31f, 0.15f, 24); circle(-0.80f, 0.35f, 0.15f, 24);
     circle(-0.64f, 0.32f, 0.16f, 24); circle(-0.48f, 0.35f, 0.14f, 24);
     circle(-0.32f, 0.33f, 0.16f, 24); circle(-0.16f, 0.36f, 0.14f, 24);
-    circle( 0.00f, 0.34f, 0.15f, 24); circle( 0.16f, 0.33f, 0.13f, 24);
-    circle( 0.32f, 0.31f, 0.11f, 24);
+    circle(0.00f, 0.34f, 0.15f, 24); circle( 0.16f, 0.33f, 0.13f, 24);
+    circle(0.32f, 0.31f, 0.11f, 24);
 
     glColor3f(0.10f, 0.48f, 0.14f);
     circle(-0.90f, 0.39f, 0.09f, 20); circle(-0.70f, 0.40f, 0.08f, 20);
     circle(-0.54f, 0.38f, 0.10f, 20); circle(-0.38f, 0.40f, 0.09f, 20);
     circle(-0.22f, 0.39f, 0.10f, 20); circle(-0.06f, 0.40f, 0.09f, 20);
-    circle( 0.10f, 0.37f, 0.08f, 20); circle( 0.27f, 0.36f, 0.07f, 20);
+    circle(0.10f, 0.37f, 0.08f, 20); circle( 0.27f, 0.36f, 0.07f, 20);
 
     glColor3f(0.03f, 0.16f, 0.05f);
     circle(-0.96f, 0.40f, 0.07f, 16); circle(-0.78f, 0.42f, 0.06f, 16);
@@ -1717,10 +2100,10 @@ void cy_trees() {
 }
 
 void cy_fence() {
-    float fLeft  = -0.36f;
+    float fLeft = -0.36f;
     float fRight =  0.52f;
-    float fBot   = -0.10f;
-    float fTop   =  0.11f;
+    float fBot = -0.10f;
+    float fTop=  0.11f;
 
     glColor3f(0.90f, 0.90f, 0.88f);
     glBegin(GL_QUADS);
@@ -1761,12 +2144,12 @@ void cy_fence() {
 }
 
 void cy_pavilionRoof() {
-    float rLeft  = -0.33f;
-    float rRight =  0.23f;
-    float rBase  =  0.18f;
-    float rMid   =  0.30f;
-    float peakX  = -0.05f;
-    float peakY  =  0.44f;
+    float rLeft = -0.33f;
+    float rRight=  0.23f;
+    float rBase =  0.18f;
+    float rMid =  0.30f;
+    float peakX = -0.05f;
+    float peakY =  0.44f;
 
     glColor3f(0.82f, 0.38f, 0.12f);
     glBegin(GL_TRIANGLES);
@@ -1801,10 +2184,10 @@ void cy_pavilionRoof() {
 }
 
 void cy_clockTower() {
-    float tLeft  = -0.14f;
+    float tLeft = -0.14f;
     float tRight =  0.08f;
-    float tBot   = -0.10f;
-    float tTop   =  0.63f;
+    float tBot = -0.10f;
+    float tTop =  0.63f;
 
     glColor3f(0.75f, 0.23f, 0.07f);
     glBegin(GL_QUADS);
@@ -1855,10 +2238,10 @@ void cy_clockTower() {
     glPopMatrix();
 
     float spireBase = 0.63f;
-    float spireTop  = 0.91f;
-    float spireL    = tLeft  - 0.025f;
-    float spireR    = tRight + 0.025f;
-    float spireX    = (spireL + spireR) * 0.5f;
+    float spireTop = 0.91f;
+    float spireL = tLeft  - 0.025f;
+    float spireR = tRight + 0.025f;
+    float spireX = (spireL + spireR) * 0.5f;
 
     glColor3f(0.90f, 0.37f, 0.15f);
     glBegin(GL_TRIANGLES);
@@ -1879,7 +2262,7 @@ void cy_clockTower() {
 
 void cy_overpass() {
     float x0 = -0.37f, y0b = 0.22f, y0t = 0.28f;
-    float x1 =  1.00f, y1b = 0.48f, y1t = 0.55f;
+    float x1 = 1.00f, y1b = 0.48f, y1t = 0.55f;
 
     glColor3f(0.61f, 0.19f, 0.06f);
     glBegin(GL_QUADS);
@@ -1917,7 +2300,7 @@ void cy_overpass() {
 void cy_trussTower() {
     float tx = 0.84f;
     float tBot = -0.30f;
-    float tTop =  0.48f;
+    float tTop = 0.48f;
 
     glColor3f(0.64f, 0.18f, 0.06f);
     glBegin(GL_QUADS);
@@ -1987,13 +2370,13 @@ void cy_road() {
     glColor3f(0.16f, 0.16f, 0.15f);
     glBegin(GL_QUADS);
     glVertex2f(-1.0f, -1.00f); glVertex2f( 1.0f, -1.00f);
-    glVertex2f( 1.0f, -0.10f); glVertex2f(-1.0f, -0.10f);
+    glVertex2f(1.0f, -0.10f); glVertex2f(-1.0f, -0.10f);
     glEnd();
 
     glColor3f(0.20f, 0.20f, 0.19f);
     glBegin(GL_QUADS);
     glVertex2f(-1.0f, -0.18f); glVertex2f( 1.0f, -0.18f);
-    glVertex2f( 1.0f, -0.10f); glVertex2f(-1.0f, -0.10f);
+    glVertex2f(1.0f, -0.10f); glVertex2f(-1.0f, -0.10f);
     glEnd();
 
     glColor3f(0.82f, 0.82f, 0.80f);
@@ -2020,25 +2403,25 @@ void cy_car() {
     glColor3f(0.08f, 0.08f, 0.08f);
     glBegin(GL_QUADS);
     glVertex2f(-0.27f, -0.08f); glVertex2f( 0.25f, -0.08f);
-    glVertex2f( 0.21f, -0.12f); glVertex2f(-0.23f, -0.12f);
+    glVertex2f(0.21f, -0.12f); glVertex2f(-0.23f, -0.12f);
     glEnd();
 
     glColor3f(0.78f, 0.16f, 0.08f);
     glBegin(GL_QUADS);
     glVertex2f(-0.25f, -0.04f); glVertex2f( 0.25f, -0.04f);
-    glVertex2f( 0.20f,  0.08f); glVertex2f(-0.22f,  0.08f);
+    glVertex2f(0.20f,  0.08f); glVertex2f(-0.22f,  0.08f);
     glEnd();
 
     glColor3f(0.86f, 0.20f, 0.09f);
     glBegin(GL_QUADS);
-    glVertex2f( 0.20f, -0.035f); glVertex2f( 0.29f, -0.020f);
-    glVertex2f( 0.25f,  0.055f); glVertex2f( 0.19f,  0.080f);
+    glVertex2f(0.20f, -0.035f); glVertex2f( 0.29f, -0.020f);
+    glVertex2f(0.25f,  0.055f); glVertex2f( 0.19f,  0.080f);
     glEnd();
 
     glColor3f(0.70f, 0.12f, 0.07f);
     glBegin(GL_QUADS);
     glVertex2f(-0.14f, 0.08f); glVertex2f( 0.11f, 0.08f);
-    glVertex2f( 0.04f, 0.18f); glVertex2f(-0.08f, 0.18f);
+    glVertex2f(0.04f, 0.18f); glVertex2f(-0.08f, 0.18f);
     glEnd();
 
     glColor3f(0.70f, 0.90f, 0.95f);
@@ -2065,11 +2448,11 @@ void cy_car() {
 
     glColor3f(0.03f, 0.03f, 0.03f);
     circle(-0.14f, -0.05f, 0.055f, 28);
-    circle( 0.14f, -0.05f, 0.055f, 28);
+    circle(0.14f, -0.05f, 0.055f, 28);
 
     glColor3f(0.55f, 0.55f, 0.52f);
     circle(-0.14f, -0.05f, 0.025f, 24);
-    circle( 0.14f, -0.05f, 0.025f, 24);
+    circle(0.14f, -0.05f, 0.025f, 24);
 
     glPopMatrix();
 }
@@ -2132,7 +2515,7 @@ void cy_trafficLight() {
     }
 }
 
-// -- City timer callback --
+//City timer callback
 void cy_update(int value) {
     if (currentScene == 6) {
         cy_Car1Move();
@@ -2144,10 +2527,10 @@ void cy_update(int value) {
         cy_clockHourAngle   = fmod(cy_clockMinuteAngle / 12.0f, 360.0f);
 
         cy_trafficLightTimer += 16.0f;
-        float greenDur  = 5000.0f;
+        float greenDur = 5000.0f;
         float yellowDur = 1500.0f;
-        float redDur    = 4000.0f;
-        float cycleDur  = greenDur + yellowDur + redDur;
+        float redDur = 4000.0f;
+        float cycleDur = greenDur + yellowDur + redDur;
         float phase = fmod(cy_trafficLightTimer, cycleDur);
         if (phase < greenDur)
             cy_trafficLightState = 2;
@@ -2184,9 +2567,9 @@ void displayCity() {
 }
 
 
-// =====================================================================
+//_________________________________________________________
+
 //  COVER PAGE  (Scene 0)
-// =====================================================================
 void coverPage() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -2205,32 +2588,32 @@ void coverPage() {
     glColor3f(0.0f, 0.0f, 0.7f);
     renderBitmapString(-0.5f, -0.32f, GLUT_BITMAP_HELVETICA_12, "SL");
     renderBitmapString(-0.35f,-0.32f, GLUT_BITMAP_HELVETICA_12, "Name");
-    renderBitmapString( 0.28f,-0.32f, GLUT_BITMAP_HELVETICA_12, "ID");
+    renderBitmapString(0.28f,-0.32f, GLUT_BITMAP_HELVETICA_12, "ID");
     glColor3f(0.0f, 0.0f, 0.0f);
     renderBitmapString(-0.5f, -0.40f, GLUT_BITMAP_HELVETICA_12, "10");
     renderBitmapString(-0.35f,-0.40f, GLUT_BITMAP_HELVETICA_12, "MEHEDI HASAN");
-    renderBitmapString( 0.25f,-0.40f, GLUT_BITMAP_HELVETICA_12, "22-48502-3");
+    renderBitmapString(0.25f,-0.40f, GLUT_BITMAP_HELVETICA_12, "22-48502-3");
     renderBitmapString(-0.5f, -0.47f, GLUT_BITMAP_HELVETICA_12, "13");
     renderBitmapString(-0.35f,-0.47f, GLUT_BITMAP_HELVETICA_12, "MD. IBTIHAZZAMAN");
-    renderBitmapString( 0.25f,-0.47f, GLUT_BITMAP_HELVETICA_12, "22-49153-3");
+    renderBitmapString(0.25f,-0.47f, GLUT_BITMAP_HELVETICA_12, "22-49153-3");
     renderBitmapString(-0.5f, -0.54f, GLUT_BITMAP_HELVETICA_12, "28");
     renderBitmapString(-0.35f,-0.54f, GLUT_BITMAP_HELVETICA_12, "MD. MUSHFIQUR RAHMAN");
-    renderBitmapString( 0.25f,-0.54f, GLUT_BITMAP_HELVETICA_12, "23-51548-1");
+    renderBitmapString(0.25f,-0.54f, GLUT_BITMAP_HELVETICA_12, "23-51548-1");
     renderBitmapString(-0.5f, -0.61f, GLUT_BITMAP_HELVETICA_12, "29");
     renderBitmapString(-0.35f,-0.61f, GLUT_BITMAP_HELVETICA_12, "MD. AHSANUL KABIR");
-    renderBitmapString( 0.25f,-0.61f, GLUT_BITMAP_HELVETICA_12, "23-51602-2");
+    renderBitmapString(0.25f,-0.61f, GLUT_BITMAP_HELVETICA_12, "23-51602-2");
     renderBitmapString(-0.5f, -0.68f, GLUT_BITMAP_HELVETICA_12, "38");
     renderBitmapString(-0.35f,-0.68f, GLUT_BITMAP_HELVETICA_12, "MD. SAYEEM");
-    renderBitmapString( 0.25f,-0.68f, GLUT_BITMAP_HELVETICA_12, "23-55321-3");
+    renderBitmapString(0.25f,-0.68f, GLUT_BITMAP_HELVETICA_12, "23-55321-3");
     renderBitmapString(-0.35f,-0.85f, GLUT_BITMAP_HELVETICA_18, "Submission Date: 07-05-2026");
-    renderBitmapString( 0.4f, -0.95f, GLUT_BITMAP_HELVETICA_12, "Press 1 for guide book");
+    renderBitmapString(0.4f, -0.95f, GLUT_BITMAP_HELVETICA_12, "Press 1 for guide book");
     glFlush();
 }
 
 
-// =====================================================================
+// ___________________________________________________________________________________________________________
+
 //  GUIDEBOOK  (Scene 1)
-// =====================================================================
 void guidebook() {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -2277,69 +2660,114 @@ void guidebook() {
 }
 
 
-// =====================================================================
+//_________________________________________________________________________________________________________
+
 //  MASTER DISPLAY
-// =====================================================================
-void display() {
-    if      (currentScene == 0) coverPage();
-    else if (currentScene == 1) guidebook();
-    else if (currentScene == 2) displayRailwayStation();
-    else if (currentScene == 3) displayTeaGarden();
-    else if (currentScene == 4) displayJaflong();
-    else if (currentScene == 5) displayUtmachora();
-    else if (currentScene == 6) displayCity();
+void display()
+{
+    if(currentScene == 0)
+    {
+        coverPage();
+    }
+    else if(currentScene == 1)
+    {
+        guidebook();
+    }
+    else if(currentScene == 2)
+    {
+        displayRailwayStation();
+    }
+    else if(currentScene == 3)
+    {
+        displayTeaGarden();
+    }
+    else if(currentScene == 4)
+    {
+        displayJaflong();
+    }
+    else if(currentScene == 5)
+    {
+        displayUtmachora();
+    }
+    else if(currentScene == 6)
+    {
+        displayCity();
+    }
 }
 
 
-// =====================================================================
-//  MASTER KEYBOARD
-// =====================================================================
-void keyboard(unsigned char key, int x, int y) {
+//_______________________________________________________________________________
 
-    // --- Global: Mute / Unmute ---
-    if (key == 'm' || key == 'M') {
+//MASTER KEYBOARD
+void keyboard(unsigned char key, int x, int y)
+{
+
+    //Global: Mute / Unmute
+    if(key == 'm' || key == 'M')
+    {
         isMuted = true;
         stopAllSounds();
         rw_isTrainSoundPlaying = false;
         glutPostRedisplay();
         return;
     }
-    if (key == 'u' || key == 'U') {
+    if(key == 'u' || key == 'U')
+    {
         isMuted = false;
-        if (currentScene == 2) {
-            if (rw_trainSpeed != 0.0f) {
+        if (currentScene == 2)
+        {
+            if (rw_trainSpeed != 0.0f)
+            {
                 PlaySound("train.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
                 rw_isTrainSoundPlaying = true;
             }
-        } else if (currentScene == 3) {
-            if (isRaining)
-                PlaySound("raincg.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
-            else if (isStarted)
-                PlaySound("teabird.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
-        } else if (currentScene == 4 && !isNight) {
-            PlaySound("JAFLONG.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
-        } else if (currentScene == 5) {
-            PlaySound("waterfall.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
-        } else if (currentScene == 6) {
-            PlaySound("Traffic.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
         }
-        glutPostRedisplay();
-        return;
+    else if(currentScene == 3)
+    {
+            if (isRaining)
+            {
+                PlaySound("raincg.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+
+            }
+            else if (isStarted)
+            {
+                 PlaySound("teabird.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+            }
+
+    }
+    else if(currentScene == 4 && !isNight)
+    {
+        PlaySound("JAFLONG.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+    }
+    else if(currentScene == 5)
+    {
+        PlaySound("waterfall.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+    }
+    else if(currentScene == 6)
+    {
+        PlaySound("Traffic.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
     }
 
-    // --- Scene navigation ---
-    if (key == '0') {
+    glutPostRedisplay();
+    return;
+    }
+
+    //Scene navigation
+    if(key == '0')
+    {
         currentScene = 0;
         stopAllSounds();
         isStarted = false; isRaining = false; cloudMoving = false;
         rw_isTrainSoundPlaying = false;
     }
-    else if (key == '1') {
+    else if(key == '1')
+    {
         currentScene = 1;
         stopAllSounds();
         rw_isTrainSoundPlaying = false;
     }
-    else if (key == '2') {
+    else if(key == '2')
+    {
         currentScene = 2;
         stopAllSounds();
         rw_isTrainSoundPlaying = false;
@@ -2348,35 +2776,44 @@ void keyboard(unsigned char key, int x, int y) {
             rw_isTrainSoundPlaying = true;
         }
     }
-    else if (key == '3') {
+    else if(key == '3')
+    {
         currentScene = 3;
         stopAllSounds();
         isRaining = false; isStarted = false; cloudMoving = false;
         rw_isTrainSoundPlaying = false;
     }
-    else if (key == '4') {
+    else if(key == '4')
+    {
         currentScene = 4;
         stopAllSounds();
         rw_isTrainSoundPlaying = false;
         if (!isMuted && !isNight)
             PlaySound("JAFLONG.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
     }
-    else if (key == '5') {
+    else if(key == '5')
+    {
         currentScene = 5;
         stopAllSounds();
         rw_isTrainSoundPlaying = false;
-        if (!isMuted)
+        if(!isMuted)
+        {
             PlaySound("waterfall.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+
+        }
     }
-    else if (key == '6') {
+    else if(key == '6')
+    {
         currentScene = 6;
         stopAllSounds();
         rw_isTrainSoundPlaying = false;
-        if (!isMuted)
-            PlaySound("Traffic.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+        if(!isMuted)
+        {
+             PlaySound("Traffic.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+        }
     }
 
-    // --- Tea Garden scene-specific (Scene 3) ---
+    //Tea Garden scene-specific (Scene 3)
     else if (currentScene == 3) {
         if (key == 'r' || key == 'R') {
             isRaining = !isRaining;
@@ -2396,9 +2833,12 @@ void keyboard(unsigned char key, int x, int y) {
         }
     }
 
-    // --- Jaflong scene-specific (Scene 4) ---
-    else if (currentScene == 4) {
-        if (key == 13) { // Enter
+    //Jaflong scene-specific (Scene 4)
+    else if (currentScene == 4)
+    {
+        if (key == 13)
+        {
+            // Enter
             isNight = !isNight;
             stopAllSounds();
             if (!isNight && !isMuted)
@@ -2406,26 +2846,43 @@ void keyboard(unsigned char key, int x, int y) {
         }
     }
 
-    // --- Utmachora scene-specific (Scene 5) ---
-    else if (currentScene == 5) {
-        if (key == 'n' || key == 'N') {
+    //Utmachora scene-specific (Scene 5)
+    else if (currentScene == 5)
+    {
+        if (key == 'n' || key == 'N')
+        {
             ut_isNightMode = !ut_isNightMode;
-            if (ut_isNightMode) {
+            if (ut_isNightMode)
+            {
                 ut_moonY = 0.22f;
                 ut_moonRising = true;
                 glutTimerFunc(30, ut_moonRiseUpdate, 0);
-            } else {
+            }
+            else
+            {
                 ut_moonRising = false;
                 ut_moonY = 0.22f;
             }
         }
-        else if (key == 'f' || key == 'F') { ut_carSpeed = 0.05f; ut_carMoving = true; }
-        else if (key == 'g' || key == 'G') { ut_carSpeed = 0.005f; ut_carMoving = true; }
-        else if (key == ' ')               { ut_carMoving = false; }
-        else if (key == 'c' || key == 'C') { ut_carMoving = true; ut_carSpeed = 0.01f; }
+        else if(key == 'f' || key == 'F')
+        {
+            ut_carSpeed = 0.05f; ut_carMoving = true;
+        }
+        else if(key == 'g' || key == 'G')
+        {
+            ut_carSpeed = 0.005f; ut_carMoving = true;
+        }
+        else if(key == ' ')
+        {
+            ut_carMoving = false;
+        }
+        else if(key == 'c' || key == 'C')
+        {
+            ut_carMoving = true; ut_carSpeed = 0.01f;
+        }
     }
 
-    // --- City scene-specific (Scene 6) ---
+    //City scene-specific (Scene 6)
     else if (currentScene == 6) {
         if (key == ' ') {
             cy_isCarMoving = !cy_isCarMoving;
@@ -2440,9 +2897,10 @@ void keyboard(unsigned char key, int x, int y) {
 }
 
 
-// =====================================================================
-//  MASTER SPECIAL (Arrow keys)
-// =====================================================================
+// _______________________________________________________________________________________________
+
+// MASTER SPECIAL (Arrow keys)
+
 void SpecialInput(int key, int x, int y) {
     if (currentScene == 2) {
         if (key == GLUT_KEY_RIGHT)
@@ -2485,14 +2943,15 @@ void SpecialInput(int key, int x, int y) {
 }
 
 
-// =====================================================================
-//  MASTER MOUSE
-// =====================================================================
+//_____________________________________________________________________________________
+
+//MASTER MOUSE
+
 void mouse(int button, int state, int x, int y) {
     if (currentScene == 2) {
         if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-            rw_nightMode = !rw_nightMode; // Toggle nightMode state
-            rw_animating = true;          // Trigger animation to the new target
+            rw_nightMode = !rw_nightMode;
+            rw_animating = true;
         }
     }
     else if (currentScene == 3) {
@@ -2509,16 +2968,17 @@ void mouse(int button, int state, int x, int y) {
     }
     else if (currentScene == 6) {
         if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-            cy_cloudMoving = !cy_cloudMoving; // Toggle cloud moving in city scene
+            cy_cloudMoving = !cy_cloudMoving;
         }
     }
     glutPostRedisplay();
 }
 
 
-// =====================================================================
-//  MAIN
-// =====================================================================
+//______________________________________________________________________________
+
+//Main
+
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(950, 680);
@@ -2530,25 +2990,25 @@ int main(int argc, char** argv) {
     glutSpecialFunc(SpecialInput);
     glutMouseFunc(mouse);
 
-    // Railway Station updates
-    glutTimerFunc(30,  rw_update,           0);
+    // Railway Station update
+    glutTimerFunc(30, rw_update, 0);
 
-    // Tea Garden timers
-    glutTimerFunc(50,  updateBirds_Tea,     0);
-    glutTimerFunc(40,  updateRain,          0);
-    glutTimerFunc(20,  updateClouds_Tea,    0);
+    // Tea Garden timer
+    glutTimerFunc(50, updateBirds_Tea,0);
+    glutTimerFunc(40, updateRain, 0);
+    glutTimerFunc(20, updateClouds_Tea, 0);
 
     // Jaflong timer
-    glutTimerFunc(100, updateJaflong,       0);
+    glutTimerFunc(100, updateJaflong, 0);
 
-    // Utmachora timers
-    glutTimerFunc(30,  ut_updateCloud,      0);
-    glutTimerFunc(30,  ut_updateWaterDrops, 0);
-    glutTimerFunc(30,  ut_updateBirds,      0);
-    glutTimerFunc(30,  ut_updateCar,        0);
+    // Utmachora timer
+    glutTimerFunc(30, ut_updateCloud, 0);
+    glutTimerFunc(30, ut_updateWaterDrops, 0);
+    glutTimerFunc(30, ut_updateBirds, 0);
+    glutTimerFunc(30, ut_updateCar,0);
 
     // City timer
-    glutTimerFunc(16,  cy_update,           0);
+    glutTimerFunc(16, cy_update,0);
 
     glutMainLoop();
     return 0;
